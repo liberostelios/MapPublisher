@@ -23,7 +23,7 @@ class WmsMapController extends Controller {
 			// Filter files with *.map name
 			if (preg_match('/(.*)\.map$/U', $file)) {
 				$map = new \mapObj(storage_path().'/app/'.$file);
-				array_push($maps, $map);
+				$maps[str_replace('.map', '', $file)] = $map;
 			}
 		}
 
@@ -67,20 +67,34 @@ class WmsMapController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function edit($file)
 	{
-		//
+		$map = new \mapObj(storage_path().'/app/'.$file.'.map');
+
+		return view('backend.mapserver.map.edit', ['map' => $map, 'file' => str_replace('.map', '', $file)]);
 	}
 
 	/**
 	 * Update the specified resource in storage.
 	 *
-	 * @param  int  $id
+	 * @param  int  $file
 	 * @return Response
 	 */
-	public function update($id)
+	public function update($file)
 	{
-		//
+		// Load the input parameters
+		$input = \Request::all();
+
+		// Load the existing map file
+		$map = new \mapObj(storage_path().'/app/'.$file.'.map');
+
+		// Update map attributes
+		$map->name = $input['name'];
+
+		// Save changes to the map file
+		$map->save(storage_path().'/app/'.$file.'.map');
+
+		return $this->index();
 	}
 
 	/**

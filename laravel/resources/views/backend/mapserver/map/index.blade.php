@@ -20,11 +20,11 @@
         </tr>
       </thead>
       <tbody>
-        @foreach ($maps as $map)
+        @foreach ($maps as $file => $map)
           <tr>
-            <td><a href='{{ asset('admin/tilelayer')}}/{{ $map->name }}/edit'>{{ $map->name }}</a></td>
+            <td><a href="{{ action('Admin\WmsMapController@edit', $file) }}">{{ $map->name }}</a></td>
             <td>{{ $map->outputformat->name }}</td>
-            <td>{{ $map->numlayers }}</td>
+            <td>{{ $map->numoutputformats }}</td>
             <td>{{ $map->getProjection() }}</td>
             <td>{!! $map->units !!}</td>
           </tr>
@@ -40,4 +40,24 @@
       </a>
     </div>
   </div><!-- /.box -->
+@stop
+
+@section ('pagescript')
+  @parent
+  <!-- DATA TABES SCRIPT -->
+  <script src="{{ asset('plugins/datatables/jquery.dataTables.js') }}" type="text/javascript"></script>
+  <script src="{{ asset('plugins/datatables/dataTables.bootstrap.js') }}" type="text/javascript"></script>
+
+  <script type="text/javascript">
+    $(function () {
+      $('#tilelayertable').dataTable({
+        "bPaginate": true,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bSort": true,
+        "bInfo": true,
+        "bAutoWidth": false
+      });
+    });
+  </script>
 @stop
