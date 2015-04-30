@@ -33,7 +33,7 @@
       </li>
       <li class="treeview">
         <a href="#">
-          <i class="fa fa-image"></i>
+          <i class="fa fa-map-marker"></i>
           <span>Web Map Layers</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
@@ -41,6 +41,16 @@
           <li><a href="{{ action('Admin\TileLayerController@index') }}"><i class="fa fa-circle-o"></i> Tile Layers</a></li>
           <li><a href="{{ action('Admin\VectorLayerController@index') }}"><i class="fa fa-circle-o"></i> Vector Layers</a></li>
         </ul>
+      </li>
+      <li class="treeview">
+        <a href="#">
+          <i class="fa fa-image"></i>
+          <span>MapServer Configuration</span>
+          <i class="fa fa-angle-left pull-right"></i>
+          <ul  class="treeview-menu">
+            <li><a href="{{ action('Admin\WmsMapController@index') }}"><i class="fa fa-circle-o"></i> WMS Maps</a></li>
+          </ul>
+        </a>
       </li>
     </ul>
   </section>

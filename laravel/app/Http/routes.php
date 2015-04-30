@@ -17,6 +17,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'namespace' => 'Admin
 	Route::get('/', 'AdminController@index');
 	Route::resource('tilelayer', 'TileLayerController');
 	Route::resource('vectorlayer', 'VectorLayerController');
+	Route::resource('wms/map', 'WmsMapController');
 });
 
 Route::resource('layer', 'LayerController',

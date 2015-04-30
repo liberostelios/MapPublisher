@@ -14,13 +14,9 @@ class VectorLayerController extends Controller {
 	 */
 	public function index()
 	{
-<<<<<<< HEAD
-		//
-=======
 		$VectorLayers = \App\Layer::all();
 
 		return view('backend.vectorlayer.index', compact('VectorLayers'));
->>>>>>> temp
 	}
 
 	/**
@@ -30,13 +26,9 @@ class VectorLayerController extends Controller {
 	 */
 	public function create()
 	{
-<<<<<<< HEAD
-		//
-=======
 		$VectorLayer = new \App\Layer();
 
 		return view('backend.vectorlayer.create', compact('VectorLayer'));
->>>>>>> temp
 	}
 
 	/**
@@ -44,17 +36,11 @@ class VectorLayerController extends Controller {
 	 *
 	 * @return Response
 	 */
-<<<<<<< HEAD
-	public function store()
-	{
-		//
-=======
 	public function store(Requests\CreateOrEditTileLayerRequest $request)
 	{
 		\App\Layer::create(Request::all());
 
 		return redirect('admin/vectorlayer');
->>>>>>> temp
 	}
 
 	/**
