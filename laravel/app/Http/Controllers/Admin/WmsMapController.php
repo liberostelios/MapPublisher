@@ -90,6 +90,7 @@ class WmsMapController extends Controller {
 
 		// Update map attributes
 		$map->name = $input['name'];
+		$map->setextent($input['extminx'], $input['extminy'], $input['extmaxx'],$input['extmaxy']);
 
 		// Save changes to the map file
 		$map->save(storage_path().'/app/'.$file.'.map');
