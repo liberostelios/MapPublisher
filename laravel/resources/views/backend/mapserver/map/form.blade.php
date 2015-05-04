@@ -121,8 +121,14 @@
         {!! Form::select('layer['.$i.'][type]', ['Point', 'Line', 'Polygon', 'Null'], $map->getlayer($i)->type, ['class' => 'form-control']) !!}
       </div>
     </div>
+  </div>
+@endfor
+
+  <div class="box box-success">
+    <div class="box-header">
+      <h3 class="box-title">Map File Actions</h3>
+    </div>
     <div class="box-footer">
       {!! Form::submit($submitButtonText, ['class' => 'btn btn-success']) !!}
     </div>
   </div>
-@endfor
