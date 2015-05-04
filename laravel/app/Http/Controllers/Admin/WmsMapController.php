@@ -88,9 +88,39 @@ class WmsMapController extends Controller {
 		// Load the existing map file
 		$map = new \mapObj(storage_path().'/app/'.$file.'.map');
 
-		// Update map attributes
+		// MAP SECTION
+
+		// Map Name
 		$map->name = $input['name'];
+
+		// Map Extents
 		$map->setextent($input['extminx'], $input['extminy'], $input['extmaxx'],$input['extmaxy']);
+
+		// Map Size
+		$map->setSize($input['width'], $input['height']);
+
+		// Map Units
+		$map->units = $input['units'];
+
+		// Map Status
+		if (!empty($input['status'])) {
+			$map->status = $input['status'] == 'ON';
+		}
+		else {
+			$map->status = 0;
+		}
+
+		// WEB SUBSECTION
+
+		// Update all metadata
+		foreach ($input['metadata'] as $key => $value) {
+			$map->web->metadata->set($key, $value);
+		}
+
+		// LAYERS SUBSECTIONS
+		foreach($input['layer'] as $key => $value) {
+			$map->getlayer($key)->name = $value['name'];
+		}
 
 		// Save changes to the map file
 		$map->save(storage_path().'/app/'.$file.'.map');

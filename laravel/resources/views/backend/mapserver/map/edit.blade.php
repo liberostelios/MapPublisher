@@ -5,9 +5,9 @@
 
 @section('content')
     {!! Form::open(['action' => ['Admin\WmsMapController@update', $file], 'method' => 'PUT']) !!}
-      @include('backend.mapserver.map.form', ['submitButtonText' => 'Update Layer'])
+      @include('backend.mapserver.map.form', ['submitButtonText' => 'Update Map File'])
     {!! Form::close() !!}
-  <div class="box">
+  <div class="box box-danger">
     <div class="box-header">
       <h3 class="box-title">Other Options</h3>
     </div>

@@ -42,6 +42,10 @@
   </div><!-- /.box -->
 @stop
 
+@section ('pagescript_top')
+  <link href="{{ asset('plugins/datatables/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css" />
+@stop
+
 @section ('pagescript')
   @parent
   <!-- DATA TABES SCRIPT -->
