@@ -20,6 +20,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'namespace' => 'Admin
 	Route::resource('wms/map', 'WmsMapController');
 });
 
+Route::get('map/{file}', 'MapController@index');
+
 Route::resource('layer', 'LayerController',
 	['only' => ['index', 'show']]);
 

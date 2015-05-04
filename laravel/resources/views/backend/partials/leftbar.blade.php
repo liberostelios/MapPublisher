@@ -48,7 +48,7 @@
           <span>MapServer Configuration</span>
           <i class="fa fa-angle-left pull-right"></i>
           <ul  class="treeview-menu">
-            <li><a href="{{ action('Admin\WmsMapController@index') }}"><i class="fa fa-circle-o"></i> WMS Maps</a></li>
+            <li><a href="{{ action('Admin\WmsMapController@index') }}"><i class="fa fa-circle-o"></i> Map Files</a></li>
           </ul>
         </a>
       </li>
