@@ -22,7 +22,7 @@
       <tbody>
         @foreach ($TileLayers as $TileLayer)
           <tr>
-            <td><a href='{{ asset('admin/tilelayer')}}/{{ $TileLayer->id }}/edit'>{{ $TileLayer->name }}</a></td>
+            <td><a href="{{ action('Admin\TileLayerController@edit', $TileLayer->id) }}">{{ $TileLayer->name }}</a></td>
             <td>{{ $TileLayer->url }}</td>
             <td>{{ $TileLayer->layer }}</td>
             <td>{{ $TileLayer->format }}</td>
@@ -33,7 +33,7 @@
       </table>
     </div><!-- /.box-body -->
     <div class="box-footer">
-      <a href="{{ asset('admin/tilelayer/create') }}">
+      <a href="{{ action('Admin\TileLayerController@create') }}">
         <button class="btn btn-primary">
           New Layer
         </button>
