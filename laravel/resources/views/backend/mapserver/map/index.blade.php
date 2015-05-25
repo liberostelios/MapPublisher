@@ -33,9 +33,9 @@
       </table>
     </div><!-- /.box-body -->
     <div class="box-footer">
-      <a href="{{ asset('admin/tilelayer/create') }}">
+      <a href="{{ action('Admin\WmsMapController@create') }}">
         <button class="btn btn-primary">
-          New Layer
+          New Map File
         </button>
       </a>
     </div>

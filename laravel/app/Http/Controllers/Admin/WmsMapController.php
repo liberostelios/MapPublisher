@@ -37,7 +37,9 @@ class WmsMapController extends Controller {
 	 */
 	public function create()
 	{
-		//
+		$map = new \mapObj();
+
+		return view('backend.mapserver.map.create', ['map' => $map, 'file' => str_replace('.map', '', $file)]);
 	}
 
 	/**
