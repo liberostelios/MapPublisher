@@ -37,9 +37,9 @@ class WmsMapController extends Controller {
 	 */
 	public function create()
 	{
-		$map = new \mapObj();
+		$map = new \mapObj('');
 
-		return view('backend.mapserver.map.create', ['map' => $map, 'file' => str_replace('.map', '', $file)]);
+		return view('backend.mapserver.map.create', ['map' => $map, 'file' => 'new']);
 	}
 
 	/**
@@ -49,7 +49,21 @@ class WmsMapController extends Controller {
 	 */
 	public function store()
 	{
-		//
+		$input = \Request::all();
+
+		$i = 0;
+		while(\Storage::disk('local')->exists('mapfile'.$i))
+			$i++;
+
+		$file = 'mapfile'.$i;
+
+		$map = new \mapObj('');
+
+		$this->updateMapFileFromInput($map, $input);
+
+		$map->save(storage_path().'/app/'.$file.'.map');
+
+		return $this->index();
 	}
 
 	/**
@@ -90,6 +104,16 @@ class WmsMapController extends Controller {
 		// Load the existing map file
 		$map = new \mapObj(storage_path().'/app/'.$file.'.map');
 
+		$this.updateMapFileFromInput($map, $input);
+
+		// Save changes to the map file
+		$map->save(storage_path().'/app/'.$file.'.map');
+
+		return $this->index();
+	}
+
+	public function updateMapFileFromInput($map, $input)
+	{
 		// MAP SECTION
 
 		// Map Name
@@ -120,14 +144,11 @@ class WmsMapController extends Controller {
 		}
 
 		// LAYERS SUBSECTIONS
-		foreach($input['layer'] as $key => $value) {
-			$map->getlayer($key)->name = $value['name'];
+		if (array_key_exists('layer', $input)) {
+			foreach($input['layer'] as $key => $value) {
+				$map->getlayer($key)->name = $value['name'];
+			}
 		}
-
-		// Save changes to the map file
-		$map->save(storage_path().'/app/'.$file.'.map');
-
-		return $this->index();
 	}
 
 	/**
@@ -136,9 +157,11 @@ class WmsMapController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($file)
 	{
-		//
+		\Storage::disk('local')->delete($file.'.map');
+
+		return $this->index();
 	}
 
 }
