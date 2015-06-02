@@ -104,7 +104,7 @@ class WmsMapController extends Controller {
 		// Load the existing map file
 		$map = new \mapObj(storage_path().'/app/'.$file.'.map');
 
-		$this.updateMapFileFromInput($map, $input);
+		$this->updateMapFileFromInput($map, $input);
 
 		// Save changes to the map file
 		$map->save(storage_path().'/app/'.$file.'.map');
@@ -146,8 +146,20 @@ class WmsMapController extends Controller {
 		// LAYERS SUBSECTIONS
 		if (array_key_exists('layer', $input)) {
 			foreach($input['layer'] as $key => $value) {
-				$map->getlayer($key)->name = $value['name'];
+				if ($key < $map->numlayers) {
+					$layer = $map->getlayer($key);
+				}
+				else {
+					$layer = new \layerObj($map);
+				}
+				$layer->name = $value['name'];
+				$layer->data = $value['data'];
+				$layer->type = $value['type'];
 			}
+		}
+
+		for($i = count($input['layer']); $i < $map->numlayers; $i++) {
+			$map->removeLayer($i);
 		}
 	}
 

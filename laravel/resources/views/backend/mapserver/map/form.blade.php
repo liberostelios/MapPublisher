@@ -100,10 +100,14 @@
 </div>
 
 {{-- Layers Section --}}
+<div id="MapLayers">
 @for($i = 0; $i < $map->numlayers; $i++)
   <div class="box box-warning">
     <div class="box-header">
       <h3 class="box-title">Layer: {{ $map->getlayer($i)->name }}</h3>
+      <div class="box-tools pull-right">
+        <button class="btn btn-box-tool" data-widget="remove" onClick="removeInput('MapLayers');"><i class="fa fa-times"></i></button>
+      </div>
     </div>
     <div class="box-body">
       <div class="form-group">
@@ -123,6 +127,7 @@
     </div>
   </div>
 @endfor
+</div>
 
   <div class="box box-success">
     <div class="box-header">
@@ -130,5 +135,44 @@
     </div>
     <div class="box-footer">
       {!! Form::submit($submitButtonText, ['class' => 'btn btn-success']) !!}
+      <button type="button" class="btn btn-warning" onClick="addInput('MapLayers');">Add Layer</button>
     </div>
   </div>
+
+@section('pagescript')
+  <script type="text/javascript">
+    var counter = {{ $map->numlayers }};
+    function addInput(divName){
+      var newdiv = document.createElement('div');
+      newdiv.innerHTML = "<div class='box box-warning'>"+
+        "<div class='box-header'>"+
+          "<h3 class='box-title'>Layer: New Layer</h3>"+
+          "<div class='box-tools pull-right'>"+
+            "<button class='btn btn-box-tool' data-widget='remove'><i class='fa fa-times'></i></button>"+
+          "</div>"+
+        "</div>"+
+        "<div class='box-body'>"+
+          "<div class='form-group'>"+
+            "<label for='layer[" + counter + "][name]'>Name</label>"+
+            "<input type='text' class='form-control' name='layer[" + counter + "][name]' id='layer[" + counter + "][name]' placeholder='Layer " + counter + "'>"+
+          "</div>"+
+          "<div class='form-group'>"+
+            "<label for='layer[" + counter + "][data]'>Data Source</label>"+
+            "<input type='text' class='form-control' name='layer[" + counter + "][data]' id='layer[" + counter + "][data]' placeholder='Data Source'>"+
+          "</div>"+
+          "<div class='form-group'>"+
+            "<label for='layer[" + counter + "][type]'>Name</label>"+
+            "<select class='form-control' id='layer[" + counter + "][type]' name='layer[" + counter + "][type]'><option value='0'>Point</option><option value='1'>Line</option><option value='2' selected='selected'>Polygon</option><option value='3'>Null</option></select>"+
+          "</div>"+
+        "</div>"+
+      "</div>";
+      document.getElementById(divName).appendChild(newdiv);
+      counter++;
+    }
+
+    function removeInput(divName){
+      document.getElementById(divName).remove();
+      counter--;
+    }
+  </script>
+@stop
