@@ -144,7 +144,9 @@ class WmsMapController extends Controller {
 		}
 
 		// LAYERS SUBSECTIONS
+		$layer_count = 0;
 		if (array_key_exists('layer', $input)) {
+			$layer_count = count($input['layer']);
 			foreach($input['layer'] as $key => $value) {
 				if ($key < $map->numlayers) {
 					$layer = $map->getlayer($key);
@@ -158,7 +160,7 @@ class WmsMapController extends Controller {
 			}
 		}
 
-		for($i = count($input['layer']); $i < $map->numlayers; $i++) {
+		for($i = $layer_count; $i < $map->numlayers; $i++) {
 			$map->removeLayer($i);
 		}
 	}

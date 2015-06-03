@@ -102,11 +102,11 @@
 {{-- Layers Section --}}
 <div id="MapLayers">
 @for($i = 0; $i < $map->numlayers; $i++)
-  <div class="box box-warning">
+  <div class="box box-warning" id="MapLayer{{ $i }}">
     <div class="box-header">
       <h3 class="box-title">Layer: {{ $map->getlayer($i)->name }}</h3>
       <div class="box-tools pull-right">
-        <button class="btn btn-box-tool" data-widget="remove" onClick="removeInput('MapLayers');"><i class="fa fa-times"></i></button>
+        <button class="btn btn-box-tool" data-widget="remove" onClick="removeInput('MapLayer{{ $i }}');"><i class="fa fa-times"></i></button>
       </div>
     </div>
     <div class="box-body">
@@ -116,7 +116,7 @@
       </div>
 
       <div class="form-group">
-        {!! Form::label('layer['.$i.'][data]', 'Data:') !!}
+        {!! Form::label('layer['.$i.'][data]', 'Data Source:') !!}
         {!! Form::text('layer['.$i.'][data]', $map->getlayer($i)->data, ['class' => 'form-control']) !!}
       </div>
 
@@ -144,11 +144,11 @@
     var counter = {{ $map->numlayers }};
     function addInput(divName){
       var newdiv = document.createElement('div');
-      newdiv.innerHTML = "<div class='box box-warning'>"+
+      newdiv.innerHTML = "<div class='box box-warning' id='MapLayer" + counter + "'>"+
         "<div class='box-header'>"+
           "<h3 class='box-title'>Layer: New Layer</h3>"+
           "<div class='box-tools pull-right'>"+
-            "<button class='btn btn-box-tool' data-widget='remove'><i class='fa fa-times'></i></button>"+
+            "<button class='btn btn-box-tool' data-widget='remove' onClick='removeInput(\"MapLayer" + counter + "\");'><i class='fa fa-times'></i></button>"+
           "</div>"+
         "</div>"+
         "<div class='box-body'>"+
