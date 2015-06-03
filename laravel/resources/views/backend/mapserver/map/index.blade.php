@@ -24,7 +24,7 @@
           <tr>
             <td><a href="{{ action('Admin\WmsMapController@edit', $file) }}">{{ $map->name }}</a></td>
             <td>{{ $map->outputformat->name }}</td>
-            <td>{{ $map->numoutputformats }}</td>
+            <td>{{ $map->numlayers }}</td>
             <td>{{ $map->getProjection() }}</td>
             <td>{!! $map->units !!}</td>
           </tr>
