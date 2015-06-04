@@ -129,6 +129,11 @@
         {!! Form::label('layer['.$i.'][type]', 'Type:') !!}
         {!! Form::select('layer['.$i.'][type]', ['Point', 'Line', 'Polygon', 'Null'], $map->getlayer($i)->type, ['class' => 'form-control']) !!}
       </div>
+
+      <div class="form-group">
+        {!! Form::label('layer['.$i.'][projection]', 'Projection:') !!}
+        {!! Form::text('layer['.$i.'][projection]', $map->getlayer($i)->getProjection(), ['class' => 'form-control']) !!}
+      </div>
     </div>
   </div>
 @endfor
