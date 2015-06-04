@@ -125,6 +125,8 @@ class WmsMapController extends Controller {
 		// Map Size
 		$map->setSize($input['width'], $input['height']);
 
+		$map->setProjection($input['projection'], true);
+
 		// Map Units
 		$map->units = $input['units'];
 

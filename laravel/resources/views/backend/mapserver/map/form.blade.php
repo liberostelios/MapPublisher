@@ -51,6 +51,11 @@
         </div>
 
         <div class="form-group">
+          {!! Form::label('projection', 'Projection:') !!}
+          {!! Form::text('projection', $map->getProjection(), ['class' => 'form-control']) !!}
+        </div>
+
+        <div class="form-group">
           {!! Form::label('units', 'Units:') !!}
           {!! Form::select('units', ['Inches', 'Feet', 'Miles', 'Meters', 'Kilometers', 'DD', 'Pixels', 'Nautical Miles'], $map->units, ['class' => 'form-control']) !!}
         </div>
