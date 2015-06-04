@@ -116,18 +116,14 @@ class WmsMapController extends Controller {
 	{
 		// MAP SECTION
 
-		// Map Name
 		$map->name = $input['name'];
 
-		// Map Extents
 		$map->setextent($input['extminx'], $input['extminy'], $input['extmaxx'],$input['extmaxy']);
 
-		// Map Size
 		$map->setSize($input['width'], $input['height']);
 
 		$map->setProjection($input['projection'], true);
 
-		// Map Units
 		$map->units = $input['units'];
 
 		// Map Status
