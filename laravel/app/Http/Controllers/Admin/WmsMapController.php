@@ -155,6 +155,8 @@ class WmsMapController extends Controller {
 				$layer->name = $value['name'];
 				$layer->data = $value['data'];
 				$layer->type = $value['type'];
+				if (array_key_exists('projection', $value))
+					$layer->setProjection($value['projection']);
 			}
 		}
 
