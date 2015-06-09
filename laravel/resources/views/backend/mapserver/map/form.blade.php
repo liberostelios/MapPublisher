@@ -134,6 +134,11 @@
         {!! Form::label('layer['.$i.'][projection]', 'Projection:') !!}
         {!! Form::text('layer['.$i.'][projection]', $map->getlayer($i)->getProjection(), ['class' => 'form-control']) !!}
       </div>
+
+      <div class="form-group">
+        {!! Form::label('layer['.$i.'][style]', 'Style:') !!}
+        {!! Form::text('layer['.$i.'][style]', $map->getlayer($i)->getClass(0)->getStyle(0)->convertToString(), ['class' => 'form-control']) !!}
+      </div>
     </div>
   </div>
 @endfor

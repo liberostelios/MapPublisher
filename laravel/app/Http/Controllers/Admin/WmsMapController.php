@@ -87,6 +87,16 @@ class WmsMapController extends Controller {
 	{
 		$map = new \mapObj(storage_path().'/app/'.$file.'.map');
 
+		for ($i = 0; $i < $map->numlayers; $i++) {
+			if ($map->getLayer($i)->numclasses == 0) {
+				$class = new \classObj($map->getLayer($i));
+			}
+
+			if ($map->getLayer($i)->getClass(0)->numstyles == 0) {
+				$style = new \styleObj($map->getLayer($i)->getClass(0));
+			}
+		}
+
 		return view('backend.mapserver.map.edit', ['map' => $map, 'file' => str_replace('.map', '', $file)]);
 	}
 
@@ -155,8 +165,12 @@ class WmsMapController extends Controller {
 				$layer->name = $value['name'];
 				$layer->data = $value['data'];
 				$layer->type = $value['type'];
-				if (array_key_exists('projection', $value))
+				if (array_key_exists('projection', $value)) {
 					$layer->setProjection($value['projection']);
+				}
+				if (array_key_exists('style', $value)) {
+					$layer->getClass(0)->getStyle(0)->updateFromString($value['style']);
+				}
 			}
 		}
 
