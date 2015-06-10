@@ -168,6 +168,15 @@ class WmsMapController extends Controller {
 				if (array_key_exists('projection', $value)) {
 					$layer->setProjection($value['projection']);
 				}
+
+				// Prepare the layer style
+				if ($layer->numclasses == 0) {
+					$class = new \classObj($layer);
+				}
+				if ($layer->getClass(0)->numstyles == 0) {
+					$style = new \styleObj($layer->getClass(0));
+				}
+
 				if (array_key_exists('style', $value)) {
 					$layer->getClass(0)->getStyle(0)->updateFromString($value['style']);
 				}
