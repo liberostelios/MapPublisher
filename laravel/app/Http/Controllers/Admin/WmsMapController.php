@@ -87,6 +87,16 @@ class WmsMapController extends Controller {
 	{
 		$map = new \mapObj(storage_path().'/app/'.$file.'.map');
 
+		for ($i = 0; $i < $map->numlayers; $i++) {
+			if ($map->getLayer($i)->numclasses == 0) {
+				$class = new \classObj($map->getLayer($i));
+			}
+
+			if ($map->getLayer($i)->getClass(0)->numstyles == 0) {
+				$style = new \styleObj($map->getLayer($i)->getClass(0));
+			}
+		}
+
 		return view('backend.mapserver.map.edit', ['map' => $map, 'file' => str_replace('.map', '', $file)]);
 	}
 
@@ -116,18 +126,14 @@ class WmsMapController extends Controller {
 	{
 		// MAP SECTION
 
-		// Map Name
 		$map->name = $input['name'];
 
-		// Map Extents
 		$map->setextent($input['extminx'], $input['extminy'], $input['extmaxx'],$input['extmaxy']);
 
-		// Map Size
 		$map->setSize($input['width'], $input['height']);
 
 		$map->setProjection($input['projection'], true);
 
-		// Map Units
 		$map->units = $input['units'];
 
 		// Map Status
@@ -159,6 +165,23 @@ class WmsMapController extends Controller {
 				$layer->name = $value['name'];
 				$layer->data = $value['data'];
 				$layer->type = $value['type'];
+				if (array_key_exists('projection', $value)) {
+					$layer->setProjection($value['projection']);
+				}
+
+				// Prepare the layer style
+				if ($layer->numclasses == 0) {
+					$class = new \classObj($layer);
+				}
+				if ($layer->getClass(0)->numstyles == 0) {
+					$style = new \styleObj($layer->getClass(0));
+				}
+
+				if (array_key_exists('color', $value)) {
+					stringToColorObj($value['color'], $layer->getClass(0)->getStyle(0)->color);
+					stringToColorObj($value['outlinecolor'], $layer->getClass(0)->getStyle(0)->outlinecolor);
+					stringToColorObj($value['backgroundcolor'], $layer->getClass(0)->getStyle(0)->backgroundcolor);
+				}
 			}
 		}
 

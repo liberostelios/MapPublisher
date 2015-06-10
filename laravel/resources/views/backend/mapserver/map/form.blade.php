@@ -134,6 +134,21 @@
         {!! Form::label('layer['.$i.'][projection]', 'Projection:') !!}
         {!! Form::text('layer['.$i.'][projection]', $map->getlayer($i)->getProjection(), ['class' => 'form-control']) !!}
       </div>
+
+      <div class="form-group">
+        {!! Form::label('layer['.$i.'][color]', 'Color:') !!}
+        {!! Form::text('layer['.$i.'][color]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->color), ['class' => 'form-control']) !!}
+      </div>
+
+      <div class="form-group">
+        {!! Form::label('layer['.$i.'][outlinecolor]', 'Outline Color:') !!}
+        {!! Form::text('layer['.$i.'][outlinecolor]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->outlinecolor), ['class' => 'form-control']) !!}
+      </div>
+
+      <div class="form-group">
+        {!! Form::label('layer['.$i.'][backgroundcolor]', 'Background Color:') !!}
+        {!! Form::text('layer['.$i.'][backgroundcolor]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->backgroundcolor), ['class' => 'form-control']) !!}
+      </div>
     </div>
   </div>
 @endfor
