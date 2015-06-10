@@ -177,8 +177,10 @@ class WmsMapController extends Controller {
 					$style = new \styleObj($layer->getClass(0));
 				}
 
-				if (array_key_exists('style', $value)) {
-					$layer->getClass(0)->getStyle(0)->updateFromString($value['style']);
+				if (array_key_exists('color', $value)) {
+					stringToColorObj($value['color'], $layer->getClass(0)->getStyle(0)->color);
+					stringToColorObj($value['outlinecolor'], $layer->getClass(0)->getStyle(0)->outlinecolor);
+					stringToColorObj($value['backgroundcolor'], $layer->getClass(0)->getStyle(0)->backgroundcolor);
 				}
 			}
 		}
