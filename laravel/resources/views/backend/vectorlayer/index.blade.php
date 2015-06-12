@@ -23,10 +23,10 @@
         @foreach ($VectorLayers as $VectorLayer)
           <tr>
             <td><a href="{{ action('Admin\VectorLayerController@edit', $VectorLayer->id) }}">{{ $VectorLayer->name }}</a></td>
-            <td>{{ $TileLayer->group }}</td>
-            <td>{{ $TileLayer->connection_string }}</td>
-            <td>{{ $TileLayer->table_name }}</td>
-            <td>{!! $TileLayer->geometry_field_name !!}</td>
+            <td>{{ $VectorLayer->group }}</td>
+            <td>{{ $VectorLayer->connection_string }}</td>
+            <td>{{ $VectorLayer->table_name }}</td>
+            <td>{!! $VectorLayer->geometry_field_name !!}</td>
           </tr>
         @endforeach
         </tbody>

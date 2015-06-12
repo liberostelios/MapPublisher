@@ -6,12 +6,12 @@ use App\Libraries\geoPHP\geoPHP;
 
 class Layer extends Model {
 
-	protected $fillable = ['name', 'connection_string', 'table_name', 'geometry_field_name'];
+	protected $fillable = ['name', 'group', 'connection_string', 'username', 'password', 'table_name', 'geometry_field_name'];
 
 	protected $hidden = ['connection_string', 'username', 'password'];
 
-	function wkb_to_json($wkb) {
-			$geom = geoPHP::load($wkb,'wkb');
+	function wkb_to_json($wkt) {
+			$geom = geoPHP::load($wkt,'wkt');
 			return $geom->out('json');
 	}
 
@@ -26,8 +26,16 @@ class Layer extends Model {
 		# Connect to MySQL database
 		$conn = new PDO($connection_string, $username, $password);
 
-		# Build SQL SELECT statement and return the geometry as a WKB element
-		$sql = "SELECT *, AsWKB($geocolumn) AS wkb FROM $table";
+		$conn_type = explode(':', $connection_string)[0];
+
+		switch ($conn_type) {
+			case 'mysql':
+				$sql = "SELECT *, AsWKT($geocolumn) AS wkt FROM $table";
+				break;
+			case 'pgsql':
+				$sql = "SELECT *, ST_AsText($geocolumn) AS wkt FROM $table";
+				break;
+		}
 
 		# Try query or error
 		$rs = $conn->query($sql);
@@ -47,11 +55,11 @@ class Layer extends Model {
 		while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
 		    $properties = $row;
 		    # Remove wkb and geometry fields from properties
-		    unset($properties['wkb']);
+		    unset($properties['wkt']);
 		    unset($properties[$geocolumn]);
 		    $feature = array(
 		         'type' => 'Feature',
-		         'geometry' => json_decode($this->wkb_to_json($row['wkb'])),
+		         'geometry' => json_decode($this->wkb_to_json($row['wkt'])),
 		         'properties' => $properties
 		    );
 
