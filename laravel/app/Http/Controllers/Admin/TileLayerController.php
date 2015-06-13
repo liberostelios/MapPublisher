@@ -86,6 +86,8 @@ class TileLayerController extends Controller {
 
 		$input = Request::all();
 
+		$input['format'] = $input['format'][0];
+
 		$TileLayer->update($input);
 
 		return redirect('admin/tilelayer');

@@ -20,7 +20,7 @@
 
     <div class="form-group">
       {!! Form::label('format', 'Image Format:') !!}
-      {!! Form::text('format', $TileLayer->format, ['class' => 'form-control']) !!}
+      {!! Form::text('format', null, ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group">
@@ -34,3 +34,31 @@
     </div>
   </div>
 </div>
+
+@section('pagescript')
+  <!-- Add reference for MagicSuggest -->
+  <link href="{{ asset('assets/magicsuggest/magicsuggest-min.css') }}" rel="stylesheet">
+  <script src="{{ asset('assets/magicsuggest/magicsuggest-min.js') }}"></script>
+
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
+
+  <!-- Script for applying MagicSuggest to the input text control -->
+  <script type="text/javascript">
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    $(function() {
+      $("#format").magicSuggest({
+        data: '{{ asset("admin/outputformats") }}',
+        valueField: 'mimetype',
+        displayField: 'name',
+        value: ['{{ $TileLayer->format }}'],
+        allowFreeEntries: false,
+        maxSelection: 1
+      });
+    });
+  </script>
+@stop
