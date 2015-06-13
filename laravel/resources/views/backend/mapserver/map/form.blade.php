@@ -122,7 +122,7 @@
 
       <div class="form-group">
         {!! Form::label('layer['.$i.'][data]', 'Data Source:') !!}
-        {!! Form::text('layer['.$i.'][data]', $map->getlayer($i)->data, ['class' => 'form-control']) !!}
+        {!! Form::text('layer['.$i.'][data]', null, ['class' => 'form-control']) !!}
       </div>
 
       <div class="form-group">
@@ -165,6 +165,31 @@
   </div>
 
 @section('pagescript')
+  <!-- Add reference for MagicSuggest -->
+  <link href="{{ asset('assets/magicsuggest/magicsuggest-min.css') }}" rel="stylesheet">
+  <script src="{{ asset('assets/magicsuggest/magicsuggest-min.js') }}"></script>
+
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
+
+  <!-- Script for applying MagicSuggest to the input text control -->
+  <script type="text/javascript">
+  $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+  });
+
+      $(function() {
+        @for($i = 0; $i < $map->numlayers; $i++)
+          $("#layer\\[{{ $i }}\\]\\[data\\]").magicSuggest({
+            data: '{{ asset("admin/datasources") }}',
+            value: ['{{ $map->getlayer($i)->data }}'],
+            maxSelection: 1
+          });
+        @endfor
+      });
+  </script>
+
   <script type="text/javascript">
     var counter = {{ $map->numlayers }};
     function addInput(divName){
