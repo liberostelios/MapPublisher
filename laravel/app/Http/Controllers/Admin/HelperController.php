@@ -23,4 +23,21 @@ class HelperController extends Controller {
 		echo json_encode($maps);
 	}
 
+	public function getMsVersion() {
+		return ms_GetVersion();
+	}
+
+	public function getOutputFormats() {
+		$formats = array(
+			array('name' => 'png', 'mimetype' => 'image/png'),
+			array('name' => 'gif', 'mimetype' => 'image/gif'),
+			array('name' => 'png8', 'mimetype' => 'image/png; mode=8bit'),
+			array('name' => 'jpeg', 'mimetype' => 'image/jpeg'),
+			//array('name' => 'svg', 'mimetype' => 'image/svg+xml'),
+			array('name' => 'GTiff', 'mimetype' => 'image/tiff')
+		);
+
+
+		return json_encode($formats);
+	}
 }
