@@ -77,7 +77,7 @@
 
         <div class="form-group">
           {!! Form::label('metadata[wms_format]', 'Image Format:') !!}
-          {!! Form::text('metadata[wms_format]', $map->web->metadata->get('wms_format'), ['class' => 'form-control']) !!}
+          {!! Form::text('metadata[wms_format]', null, ['class' => 'form-control']) !!}
         </div>
 
         <div class="form-group">
@@ -188,6 +188,16 @@
           });
         @endfor
       });
+
+    $(function() {
+      $("#metadata\\[wms_format\\]").magicSuggest({
+        data: '{{ asset("admin/outputformats") }}',
+        valueField: 'mimetype',
+        displayField: 'name',
+        value: ['{{ $map->web->metadata->get('wms_format') }}'],
+        maxSelection: 1
+      });
+    });
   </script>
 
   <script type="text/javascript">

@@ -148,6 +148,9 @@ class WmsMapController extends Controller {
 
 		// Update all metadata
 		foreach ($input['metadata'] as $key => $value) {
+			if (is_array($value)) {
+				$value = implode(' ', $value);
+			}
 			$map->web->metadata->set($key, $value);
 		}
 
@@ -163,7 +166,7 @@ class WmsMapController extends Controller {
 					$layer = new \layerObj($map);
 				}
 				$layer->name = $value['name'];
-				$layer->data = $value['data'];
+				$layer->data = $value['data'][0];
 				$layer->type = $value['type'];
 				if (array_key_exists('projection', $value)) {
 					$layer->setProjection($value['projection']);
