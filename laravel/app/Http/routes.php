@@ -22,6 +22,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'namespace' => 'Admin
 	Route::any('datasources', 'HelperController@getDataSources');
 	Route::any('mapserver', 'HelperController@getMsVersion');
 	Route::any('outputformats', 'HelperController@getOutputFormats');
+	Route::any('assets/icons', 'HelperController@getAssetsIcons');
 });
 
 Route::get('map/{file}', 'MapController@index');

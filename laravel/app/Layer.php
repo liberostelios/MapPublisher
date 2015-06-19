@@ -6,7 +6,7 @@ use App\Libraries\geoPHP\geoPHP;
 
 class Layer extends Model {
 
-	protected $fillable = ['name', 'group', 'connection_string', 'username', 'password', 'table_name', 'geometry_field_name'];
+	protected $fillable = ['name', 'group', 'connection_string', 'username', 'password', 'table_name', 'geometry_field_name', 'img_url', 'title_field'];
 
 	protected $hidden = ['connection_string', 'username', 'password'];
 

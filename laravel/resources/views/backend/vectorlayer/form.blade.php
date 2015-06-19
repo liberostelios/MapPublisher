@@ -37,6 +37,16 @@
       {!! Form::label('geometry_field_name', 'Geometry Field:') !!}
       {!! Form::text('geometry_field_name', $VectorLayer->geometry_field_name, ['class' => 'form-control']) !!}
     </div>
+
+    <div class="form-group">
+      {!! Form::label('title_field', 'Title Field:') !!}
+      {!! Form::text('title_field', $VectorLayer->title_field, ['class' => 'form-control']) !!}
+    </div>
+
+    <div class="form-group">
+      {!! Form::label('img_url', 'Icon:') !!}
+      {!! Form::text('img_url', null, ['class' => 'form-control']) !!}
+    </div>
   </div>
   <div class="box-footer">
     <div class="form-group">
@@ -44,3 +54,28 @@
     </div>
   </div>
 </div>
+
+@section('pagescript')
+  <!-- Add reference for MagicSuggest -->
+  <link href="{{ asset('assets/magicsuggest/magicsuggest-min.css') }}" rel="stylesheet">
+  <script src="{{ asset('assets/magicsuggest/magicsuggest-min.js') }}"></script>
+
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
+
+  <!-- Script for applying MagicSuggest to the input text control -->
+  <script type="text/javascript">
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $(function() {
+      $("#img_url").magicSuggest({
+        data: '{{ asset("admin/assets/icons") }}',
+        value: ['{{ $VectorLayer->img_url }}'],
+        maxSelection: 1
+      });
+    });
+  </script>
+@stop

@@ -40,6 +40,8 @@ class VectorLayerController extends Controller {
 	{
 		$input = \Request::all();
 
+		$input = $this->reformRequest($input);
+
 		\App\Layer::create($input);
 
 		return redirect('admin/vectorlayer');
@@ -81,9 +83,23 @@ class VectorLayerController extends Controller {
 
 		$input = \Request::all();
 
+		$input = $this->reformRequest($input);
+
 		$VectorLayer->update($input);
 
 		return redirect('admin/vectorlayer');
+	}
+
+	public function reformRequest($input)
+	{
+		if (array_key_exists('img_url', $input)) {
+			$input['img_url'] = $input['img_url'][0];
+		}
+		else {
+			$input['img_url'] = null;
+		}
+
+		return $input;
 	}
 
 	/**

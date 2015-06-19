@@ -27,6 +27,10 @@ class HelperController extends Controller {
 		return ms_GetVersion();
 	}
 
+	public function getAssetsIcons() {
+		return \Storage::disk('public')->files('assets/img');
+	}
+
 	public function getOutputFormats() {
 		$formats = array(
 			array('name' => 'png', 'mimetype' => 'image/png'),
