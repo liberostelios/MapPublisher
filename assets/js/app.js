@@ -22,7 +22,18 @@ $("#about-btn").click(function() {
 });
 
 $("#full-extent-btn").click(function() {
-  map.fitBounds(boroughs.getBounds());
+  /* Fit map to poi layers bounds */
+  var Bounds = null;
+  for(var key in poiLayers) {
+    if (Bounds == null) {
+      Bounds = poiLayers[key].layer.getBounds();
+    }
+    else {
+      Bounds.extend(poiLayers[key].layer.getBounds());
+    }
+  }
+
+  map.fitBounds(Bounds);
   $(".navbar-collapse.in").collapse("hide");
   return false;
 });
@@ -500,14 +511,19 @@ var baseLayers = {}
 /* Get the list of layers from the tilelayer resource */
 $.getJSON("/mappublisher/tilelayer", function (layers) {
   baseLayers = {}
+  var FirstLayer = null;
 
   layers.forEach(function(layer){
     layerControl.addBaseLayer(JsonToTileLayer(layer), layer.name);
+    if (FirstLayer == null) {
+      FirstLayer = JsonToTileLayer(layer);
+    }
   });
 
   if (layers.length > 0)
   {
     map.removeLayer(mapquestOSM);
+    map.addLayer(FirstLayer);
   }
 });
 
@@ -557,7 +573,7 @@ $("#featureModal").on("hidden.bs.modal", function (e) {
 $(document).one("ajaxStop", function () {
   $("#loading").hide();
   sizeLayerControl();
-  /* Fit map to boroughs bounds */
+  /* Fit map to poi layers bounds */
   var Bounds = null;
   for(var key in poiLayers) {
     if (Bounds == null) {
