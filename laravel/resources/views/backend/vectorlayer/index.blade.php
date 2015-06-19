@@ -1,6 +1,6 @@
 @extends('backend.admin')
 
-@section('title', 'Vector Layers')
+@section('title', 'POI Layers')
 @section('smalltitle', 'Manage GeoJSON Layers')
 
 @section ('content')
