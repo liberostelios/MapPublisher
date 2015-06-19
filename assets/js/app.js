@@ -337,7 +337,7 @@ $.getJSON("/mappublisher/layer", function(layers) {
         title_field: data['title_field']
       };
       map.addLayer(newLayerHolder);
-      layerControl.addOverlay(newLayerHolder, layer.name, layer.group);
+      layerControl.addOverlay(newLayerHolder, "<img src='" + data['style']['Icon'] + "' width='24' height='28'>&nbsp;" + layer.name, layer.group);
     });
   });
 });
