@@ -39,7 +39,7 @@
         </a>
         <ul class="treeview-menu">
           <li><a href="{{ action('Admin\TileLayerController@index') }}"><i class="fa fa-circle-o"></i> Tile Layers</a></li>
-          <li><a href="{{ action('Admin\VectorLayerController@index') }}"><i class="fa fa-circle-o"></i> Vector Layers</a></li>
+          <li><a href="{{ action('Admin\VectorLayerController@index') }}"><i class="fa fa-circle-o"></i> POI Layers</a></li>
         </ul>
       </li>
       <li class="treeview">
