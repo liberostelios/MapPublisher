@@ -88,7 +88,7 @@ function syncSidebar() {
     poiLayers[key].layer.eachLayer(function (layer) {
       if (map.hasLayer(poiLayers[key].placeholder)) {
         if (map.getBounds().contains(layer.getLatLng())) {
-          $("#feature-list tbody").append('<tr class="feature-row" id="' + L.stamp(layer) + '" lat="' + layer.getLatLng().lat + '" lng="' + layer.getLatLng().lng + '"><td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/theater.png"></td><td class="feature-name">' + layer.feature.properties.OGR_FID + '</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
+          $("#feature-list tbody").append('<tr class="feature-row" id="' + L.stamp(layer) + '" lat="' + layer.getLatLng().lat + '" lng="' + layer.getLatLng().lng + '"><td style="vertical-align: middle;"><img width="16" height="18" src="'+ poiLayers[key]['style']['Icon'] + '"></td><td class="feature-name">' + layer.feature.properties[poiLayers[key]['title_field']] + '</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
         }
       }
     });
@@ -291,12 +291,12 @@ $.getJSON("/mappublisher/layer", function(layers) {
         pointToLayer: function (feature, latlng) {
           return L.marker(latlng, {
             icon: L.icon({
-              iconUrl: "assets/img/theater.png",
+              iconUrl: data['style']['Icon'],
               iconSize: [24, 28],
               iconAnchor: [12, 28],
               popupAnchor: [0, -25]
             }),
-            title: feature.properties.OGR_FID,
+            title: feature.properties.ogc_fid,
             riseOnHover: true
           });
         },
@@ -320,7 +320,7 @@ $.getJSON("/mappublisher/layer", function(layers) {
             });
             $("#feature-list tbody").append('<tr class="feature-row" id="' + L.stamp(layer) + '" lat="' + layer.getLatLng().lat + '" lng="' + layer.getLatLng().lng + '"><td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/theater.png"></td><td class="feature-name">' + layer.feature.properties.OGR_FID + '</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
             theaterSearch.push({
-              name: layer.feature.properties.OGR_FID,
+              name: layer.feature.properties.ogc_fid,
               source: "Theaters",
               id: L.stamp(layer),
               lat: layer.feature.geometry.coordinates[1],
@@ -332,7 +332,9 @@ $.getJSON("/mappublisher/layer", function(layers) {
 
       poiLayers[layer.name] = {
         placeholder: newLayerHolder,
-        layer: newLayer
+        layer: newLayer,
+        style: data['style'],
+        title_field: data['title_field']
       };
       map.addLayer(newLayerHolder);
       layerControl.addOverlay(newLayerHolder, layer.name, layer.group);
@@ -579,7 +581,7 @@ $(document).one("ajaxStop", function () {
   var theatersBH = new Bloodhound({
     name: "Theaters",
     datumTokenizer: function (d) {
-      return Bloodhound.tokenizers.whitespace(d.name);
+      return Bloodhound.tokenizers.whitespace(d.ogc_fid);
     },
     queryTokenizer: Bloodhound.tokenizers.whitespace,
     local: theaterSearch,
@@ -645,7 +647,7 @@ $(document).one("ajaxStop", function () {
     }
   }, {
     name: "Theaters",
-    displayKey: "name",
+    displayKey: "ogc_fid",
     source: theatersBH.ttAdapter(),
     templates: {
       header: "<h4 class='typeahead-header'><img src='assets/img/theater.png' width='24' height='28'>&nbsp;Theaters</h4>",
