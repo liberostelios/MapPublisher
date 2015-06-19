@@ -287,6 +287,8 @@ $.getJSON("/mappublisher/layer", function(layers) {
 
     /* Fill the real layer data */
     $.getJSON("/mappublisher/layer/" + layer.id, function (data) {
+      var title_field = data['title_field'];
+
       newLayer = L.Proj.geoJson(data, {
         pointToLayer: function (feature, latlng) {
           return L.marker(latlng, {
@@ -296,17 +298,15 @@ $.getJSON("/mappublisher/layer", function(layers) {
               iconAnchor: [12, 28],
               popupAnchor: [0, -25]
             }),
-            title: feature.properties.ogc_fid,
+            title: feature.properties[title_field],
             riseOnHover: true
           });
         },
         onEachFeature: function (feature, layer) {
           if (feature.properties) {
             var content = "<table class='table table-striped table-bordered table-condensed'>"
-            var title = null;
+            var title = feature.properties[title_field];
             for(var property in feature.properties) {
-              if (title == null)
-                title = feature.properties[property];
               content += "<tr><th>" + property + "</th><td>" + feature.properties[property] + "</td></tr>"
             }
             content += "<table>";
@@ -318,10 +318,10 @@ $.getJSON("/mappublisher/layer", function(layers) {
                 highlight.clearLayers().addLayer(L.circleMarker([feature.geometry.coordinates[1], feature.geometry.coordinates[0]], highlightStyle));
               }
             });
-            $("#feature-list tbody").append('<tr class="feature-row" id="' + L.stamp(layer) + '" lat="' + layer.getLatLng().lat + '" lng="' + layer.getLatLng().lng + '"><td style="vertical-align: middle;"><img width="16" height="18" src="assets/img/theater.png"></td><td class="feature-name">' + layer.feature.properties.OGR_FID + '</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
+            $("#feature-list tbody").append('<tr class="feature-row" id="' + L.stamp(layer) + '" lat="' + layer.getLatLng().lat + '" lng="' + layer.getLatLng().lng + '"><td style="vertical-align: middle;"><img width="16" height="18" src="' + data['style']['Icon'] + '"></td><td class="feature-name">' + layer.feature.properties[title_field] + '</td><td style="vertical-align: middle;"><i class="fa fa-chevron-right pull-right"></i></td></tr>');
             theaterSearch.push({
-              name: layer.feature.properties.ogc_fid,
-              source: "Theaters",
+              name: layer.feature.properties[title_field],
+              source: layer.name,
               id: L.stamp(layer),
               lat: layer.feature.geometry.coordinates[1],
               lng: layer.feature.geometry.coordinates[0]
@@ -337,6 +337,7 @@ $.getJSON("/mappublisher/layer", function(layers) {
         title_field: data['title_field']
       };
       map.addLayer(newLayerHolder);
+      markerClusters.addLayer(newLayer);
       layerControl.addOverlay(newLayerHolder, "<img src='" + data['style']['Icon'] + "' width='24' height='28'>&nbsp;" + layer.name, layer.group);
     });
   });
@@ -522,13 +523,6 @@ function JsonToTileLayer(layer)
   return newLayer;
 }
 
-var poiLayersGroup = {}
-for(var key in poiLayers) {
-  if (poiLayers.hasOwnProperty(key)) {
-    poiLayersGroup["<img src='assets/img/theater.png' width='24' height='28'>&nbsp;lala"] = key;
-  }
-}
-
 var groupedOverlays = {
   "Points of Interest": {
     "Museums": museumLayer
@@ -564,7 +558,17 @@ $(document).one("ajaxStop", function () {
   $("#loading").hide();
   sizeLayerControl();
   /* Fit map to boroughs bounds */
-  map.fitBounds(boroughs.getBounds());
+  var Bounds = null;
+  for(var key in poiLayers) {
+    if (Bounds == null) {
+      Bounds = poiLayers[key].layer.getBounds();
+    }
+    else {
+      Bounds.extend(poiLayers[key].layer.getBounds());
+    }
+  }
+
+  map.fitBounds(Bounds);
   featureList = new List("features", {valueNames: ["feature-name"]});
   featureList.sort("feature-name", {order:"asc"});
 
