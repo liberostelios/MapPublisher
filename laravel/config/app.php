@@ -146,6 +146,11 @@ return [
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
 
+
+		/*
+		* Other Service Providers...
+		*/
+		'Barryvdh\Elfinder\ElfinderServiceProvider',
 	],
 
 	/*
