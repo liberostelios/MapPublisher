@@ -282,14 +282,16 @@ var markerClusters = new L.MarkerClusterGroup({
   disableClusteringAtZoom: 16
 });
 
-/* Empty layer placeholder to add to layer control for listening when to add/remove theaters to markerClusters layer */
-var theaterLayer = L.Proj.geoJson([]);
-proj4.defs("urn:ogc:def:crs:EPSG::2100", "+proj=tmerc +lat_0=0 +lon_0=24 +k=0.9996 +x_0=500000 +y_0=0 +ellps=GRS80 +towgs84=-199.87,74.79,246.62,0,0,0,0 +units=m +no_defs ");
+/* Apply projection definitions */
+$.getJSON("/mappublisher/projection", function(projections) {
+  projections.forEach(function(projection){
+    proj4.defs(projection['name'], projection['params']);
+  });
+});
 
 var poiLayers = {};
 
 /* Request of configured layers from the database */
-var theaters = {};
 $.getJSON("/mappublisher/layer", function(layers) {
 
   layers.forEach(function(layer){
