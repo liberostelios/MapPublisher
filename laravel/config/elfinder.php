@@ -10,7 +10,7 @@ return array(
     | The dir where to store the images (relative from public)
     |
     */
-    'dir' => ['files'],
+    'dir' => ['assets'],
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +26,11 @@ return array(
     |    ]
     */
     'disks' => [
-      'datasources'
+        'mydisk' => [
+          'URL' => url('assets'),
+          'alias' => 'Local storage',
+        ],
+        'datasources'
     ],
 
     /*
@@ -40,7 +44,7 @@ return array(
 
     'route' => [
         'prefix' => 'elfinder',
-        'middleware' => 'replace-this-with-your-middleware', //Set to null to disable middleware filter
+        'middleware' => null, //Set to null to disable middleware filter
     ],
 
     /*
@@ -64,7 +68,22 @@ return array(
     |
     */
 
-    'roots' => null,
+    'roots'  => array(
+      array(
+          'driver' => 'LocalFileSystem',
+          'path'   => storage_path().'/app/datasources/',
+          'URL'    => 'http://localhost/datasources',
+          'alias'  => 'Datasources',
+          'defaults' => array('read' => true, 'write' => true)
+      ),
+      array(
+          'driver' => 'LocalFileSystem',
+          'path'   => '/home/mappublisher/html/mappublisher/assets/img/',
+          'URL'    => 'http://localhost/assets/img',
+          'alias'  => 'Icons'
+      ),
+
+    ),
 
     /*
     |--------------------------------------------------------------------------

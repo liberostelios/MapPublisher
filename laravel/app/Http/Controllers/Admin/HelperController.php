@@ -44,4 +44,8 @@ class HelperController extends Controller {
 
 		return json_encode($formats);
 	}
+
+	public function showFileManager() {
+		return view('backend.filemanager');
+	}
 }
