@@ -26,7 +26,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'namespace' => 'Admin
 	Route::any('assets/icons', 'HelperController@getAssetsIcons');
 });
 
-Route::get('map/{file}', 'MapController@index');
+Route::get('map', 'MapController@index');
+Route::get('map/{file}', 'MapController@show');
 
 Route::resource('layer', 'LayerController',
 	['only' => ['index', 'show']]);
