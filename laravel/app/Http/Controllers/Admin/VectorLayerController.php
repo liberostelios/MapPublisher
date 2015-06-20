@@ -99,6 +99,13 @@ class VectorLayerController extends Controller {
 			$input['img_url'] = null;
 		}
 
+		if (array_key_exists('projection', $input)) {
+			$input['projection'] = $input['projection'][0];
+		}
+		else {
+			$input['projection'] = null;
+		}
+
 		return $input;
 	}
 

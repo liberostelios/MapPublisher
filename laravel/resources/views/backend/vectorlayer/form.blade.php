@@ -39,6 +39,11 @@
     </div>
 
     <div class="form-group">
+      {!! Form::label('projection', 'Projection:') !!}
+      {!! Form::text('projection', null, ['class' => 'form-control']) !!}
+    </div>
+
+    <div class="form-group">
       {!! Form::label('title_field', 'Title Field:') !!}
       {!! Form::text('title_field', $VectorLayer->title_field, ['class' => 'form-control']) !!}
     </div>
@@ -74,6 +79,17 @@
       $("#img_url").magicSuggest({
         data: '{{ asset("admin/assets/icons") }}',
         value: ['{{ $VectorLayer->img_url }}'],
+        maxSelection: 1
+      });
+    });
+
+    $(function() {
+      $("#projection").magicSuggest({
+        data: '{{ asset("projection") }}',
+        method: 'get',
+        valueField: 'name',
+        deisplayField: 'description',
+        value: ['{{ $VectorLayer->projection }}'],
         maxSelection: 1
       });
     });

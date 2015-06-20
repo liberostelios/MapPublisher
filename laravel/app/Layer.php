@@ -6,7 +6,7 @@ use App\Libraries\geoPHP\geoPHP;
 
 class Layer extends Model {
 
-	protected $fillable = ['name', 'group', 'connection_string', 'username', 'password', 'table_name', 'geometry_field_name', 'img_url', 'title_field'];
+	protected $fillable = ['name', 'group', 'connection_string', 'username', 'password', 'table_name', 'geometry_field_name', 'img_url', 'title_field', 'projection'];
 
 	protected $hidden = ['connection_string', 'username', 'password'];
 
@@ -96,7 +96,7 @@ class Layer extends Model {
 		$geojson = array(
 		   'type'      => 'FeatureCollection',
 		   'features'  => array(),
-		   'crs' => array('type' => 'name', 'properties' => array('name' => 'urn:ogc:def:crs:EPSG::2100'))
+		   'crs' => array('type' => 'name', 'properties' => array('name' => $this->attributes['projection']))
 		);
 
 		# Loop through rows to build feature arrays
