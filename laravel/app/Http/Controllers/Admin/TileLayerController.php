@@ -101,7 +101,7 @@ class TileLayerController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		$TileLayer = \App\TileLAyer::findOrFail($id);
+		$TileLayer = \App\TileLayer::findOrFail($id);
 
 		$TileLayer->delete();
 
