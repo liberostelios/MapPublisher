@@ -18,6 +18,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'namespace' => 'Admin
 	Route::resource('tilelayer', 'TileLayerController');
 	Route::resource('vectorlayer', 'VectorLayerController');
 	Route::resource('wms/map', 'WmsMapController');
+	Route::resource('projection', 'ProjectionController');
 
 	Route::any('datasources', 'HelperController@getDataSources');
 	Route::any('mapserver', 'HelperController@getMsVersion');
@@ -29,6 +30,8 @@ Route::get('map/{file}', 'MapController@index');
 
 Route::resource('layer', 'LayerController',
 	['only' => ['index', 'show']]);
+
+Route::resource('projection', 'ProjectionController', ['only' => ['index', 'show']]);
 
 Route::resource('tilelayer', 'TileLayerController');
 

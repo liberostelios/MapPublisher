@@ -45,10 +45,11 @@
       <li class="treeview">
         <a href="#">
           <i class="fa fa-image"></i>
-          <span>MapServer Configuration</span>
+          <span>Server Configuration</span>
           <i class="fa fa-angle-left pull-right"></i>
           <ul  class="treeview-menu">
-            <li><a href="{{ action('Admin\WmsMapController@index') }}"><i class="fa fa-circle-o"></i> Map Files</a></li>
+            <li><a href="{{ action('Admin\WmsMapController@index') }}"><i class="fa fa-circle-o"></i> MapServer Files</a></li>
+            <li><a href="{{ action ('Admin\ProjectionController@index') }}"><i class="fa fa-circle-o"></i> Projections</a></li>
           </ul>
         </a>
       </li>
