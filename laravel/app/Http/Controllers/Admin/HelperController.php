@@ -28,7 +28,7 @@ class HelperController extends Controller {
 	}
 
 	public function getAssetsIcons() {
-		return \Storage::disk('public')->files('assets/img');
+		return \Storage::disk('icons')->files();
 	}
 
 	public function getOutputFormats() {

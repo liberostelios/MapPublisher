@@ -29,7 +29,7 @@ class Layer extends Model {
 			$geojson = $this->loadPDOData($connection_string, $username, $password, $table, $geocolumn);
 		}
 
-		$geojson['style'] = array('Icon' => $this->attributes['img_url']);
+		$geojson['style'] = array('Icon' => 'assets/img/'.$this->attributes['img_url']);
 		$geojson['title_field'] = $this->attributes['title_field'];
 
 		header('Content-type: application/json');

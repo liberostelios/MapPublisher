@@ -53,6 +53,11 @@ return [
 			'root'   => storage_path().'app/datasources',
 		],
 
+		'icons' => [
+			'driver' => 'local',
+			'root'	 => base_path().'/../assets/img',
+		],
+
 		'public' => [
 			'driver' =>	'local',
 			'root'   => base_path().'/..',
