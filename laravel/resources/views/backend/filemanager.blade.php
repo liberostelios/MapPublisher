@@ -28,6 +28,9 @@
   <script type="text/javascript" charset="utf-8">
     $().ready(function() {
         var elf = $('#elfinder').elfinder({
+          customData: {
+            _token: '{{ csrf_token() }}'
+          },
             // lang: 'ru',             // language (OPTIONAL)
             url : '{{asset('elfinder/connector')}}'  // connector URL (REQUIRED)
         }).elfinder('instance');
