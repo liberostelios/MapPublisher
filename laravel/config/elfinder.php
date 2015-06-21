@@ -26,11 +26,6 @@ return array(
     |    ]
     */
     'disks' => [
-        'mydisk' => [
-          'URL' => url('assets'),
-          'alias' => 'Local storage',
-        ],
-        'datasources'
     ],
 
     /*
