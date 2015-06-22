@@ -132,7 +132,9 @@ class WmsMapController extends Controller {
 
 		$map->setSize($input['width'], $input['height']);
 
-		$map->setProjection($input['projection'], true);
+		if (array_key_exists('projection', $input)) {
+			$map->setProjection($input['projection'][0], MS_TRUE);
+		}
 
 		$map->units = $input['units'];
 
@@ -169,7 +171,7 @@ class WmsMapController extends Controller {
 				$layer->data = $value['data'][0];
 				$layer->type = $value['type'];
 				if (array_key_exists('projection', $value)) {
-					$layer->setProjection($value['projection']);
+					$layer->setProjection($value['projection'][0]);
 				}
 
 				// Prepare the layer style

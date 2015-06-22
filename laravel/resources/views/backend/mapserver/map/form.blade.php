@@ -52,7 +52,7 @@
 
         <div class="form-group">
           {!! Form::label('projection', 'Projection:') !!}
-          {!! Form::text('projection', $map->getProjection(), ['class' => 'form-control']) !!}
+          {!! Form::text('projection', null, ['class' => 'form-control']) !!}
         </div>
 
         <div class="form-group">
@@ -87,7 +87,7 @@
 
         <div class="form-group">
           {!! Form::label('metadata[wms_srs]', 'SRS:') !!}
-          {!! Form::text('metadata[wms_srs]', $map->web->metadata->get('wms_srs'), ['class' => 'form-control']) !!}
+          {!! Form::text('metadata[wms_srs]', null, ['class' => 'form-control']) !!}
         </div>
 
         <div class="form-group">
@@ -132,7 +132,7 @@
 
       <div class="form-group">
         {!! Form::label('layer['.$i.'][projection]', 'Projection:') !!}
-        {!! Form::text('layer['.$i.'][projection]', $map->getlayer($i)->getProjection(), ['class' => 'form-control']) !!}
+        {!! Form::text('layer['.$i.'][projection]', null, ['class' => 'form-control']) !!}
       </div>
 
       <div class="form-group">
@@ -186,6 +186,16 @@
             value: ['{{ $map->getlayer($i)->data }}'],
             maxSelection: 1
           });
+
+          $("#layer\\[{{ $i }}\\]\\[projection\\]").magicSuggest({
+            allowFreeEntries: false,
+            data: '{{ asset("projection") }}',
+            method: 'get',
+            valueField: 'params',
+            displayField: 'description',
+            value: ['{{ $map->getlayer($i)->getProjection() }}'],
+            maxSelection: 1
+          });
         @endfor
       });
 
@@ -194,7 +204,25 @@
         data: '{{ asset("admin/outputformats") }}',
         valueField: 'mimetype',
         displayField: 'name',
-        value: ['{{ $map->web->metadata->get('wms_format') }}'],
+        value: ['{{ $map->web->metadata->get('wms_format') }}']
+      });
+
+      $("#metadata\\[wms_srs\\]").magicSuggest({
+        allowFreeEntries: false,
+        data: '{{ asset("projection") }}',
+        method: 'get',
+        valueField: 'name',
+        displayField: 'description',
+        value: ['{{ $map->web->metadata->get('wms_srs') }}']
+      });
+
+      $("#projection").magicSuggest({
+        allowFreeEntries: false,
+        data: '{{ asset("projection") }}',
+        method: 'get',
+        valueField: 'params',
+        displayField: 'description',
+        value: ['{{ $map->getProjection() }}'],
         maxSelection: 1
       });
     });
@@ -227,6 +255,12 @@
         "</div>"+
       "</div>";
       document.getElementById(divName).appendChild(newdiv);
+
+      $("#layer\\[" + counter + "\\]\\[data\\]").magicSuggest({
+        data: '{{ asset("admin/datasources") }}',
+        value: [],
+        maxSelection: 1
+      });
       counter++;
     }
 
