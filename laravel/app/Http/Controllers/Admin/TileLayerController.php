@@ -43,7 +43,11 @@ class TileLayerController extends Controller {
 	 */
 	public function store(Requests\CreateOrEditTileLayerRequest $request)
 	{
-		\App\TileLayer::create(Request::all());
+		$input = Request::all();
+
+		$input['format'] = $input['format'][0];
+
+		\App\TileLayer::create($input);
 
 		return redirect('admin/tilelayer');
 	}
