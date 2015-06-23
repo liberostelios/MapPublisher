@@ -97,7 +97,7 @@ class WmsMapController extends Controller {
 			}
 		}
 
-		return view('backend.mapserver.map.edit', ['map' => $map, 'file' => str_replace('.map', '', $file)]);
+		return view('backend.mapserver.map.edit', ['map' => $map, 'file' => str_replace('.map', '', $file), 'connections' => $this->refactorConnectionData($map)]);
 	}
 
 	/**
@@ -120,6 +120,30 @@ class WmsMapController extends Controller {
 		$map->save(storage_path().'/app/'.$file.'.map');
 
 		return $this->index();
+	}
+
+	// Function that gets a $map object and return an array of connection parameters for the view
+	public function refactorConnectionData($map)
+	{
+		$connections = array();
+		for($i = 0; $i < $map->numlayers; $i++) {
+			$layer = $map->getlayer($i);
+			$connection = array('data' => null, 'host' => null, 'port' => null, 'user' => null, 'password' => null, 'dbname' => null, 'field' => null, 'table' => null);
+			if ($layer->connectiontype == MS_SHAPEFILE) {
+				$connection['data'] = $layer->data;
+			} elseif ($layer->connectiontype == MS_POSTGIS) {
+				$params = explode(' ', $layer->connection);
+				foreach ($params as $param) {
+					$connection[explode('=', $param)[0]] = explode('=', $param)[1];
+				}
+				$connection['field'] = explode(' from ', $layer->data)[0];
+				$connection['table'] = explode(' from ', $layer->data)[1];
+			}
+
+			array_push($connections, $connection);
+		}
+
+		return $connections;
 	}
 
 	public function updateMapFileFromInput($map, $input)
@@ -168,8 +192,22 @@ class WmsMapController extends Controller {
 					$layer = new \layerObj($map);
 				}
 				$layer->name = $value['name'];
-				$layer->data = $value['data'][0];
 				$layer->type = $value['type'];
+
+				// Setup layer data
+				if ($value['connectiontype'] == MS_SHAPEFILE) {
+					if (array_key_exists('data', $value)) {
+						$layer->data = $value['data'][0];
+					}
+					else {
+						$layer->data = null;
+					}
+				} elseif ($value['connectiontype'] == MS_POSTGIS) {
+					$layer->connection = 'user='.$value['connectionuser'].' password='.$value['connectionpass'].' dbname='.$value['connectiondb'].' host='.$value['connectionhost'].' port='.$value['connectionport'];
+					$layer->data = $value['connectionfield'].' from '.$value['connectiontable'];
+				}
+				$layer->setConnectionType($value['connectiontype']);
+
 				if (array_key_exists('projection', $value)) {
 					$layer->setProjection($value['projection'][0]);
 				}

@@ -121,8 +121,48 @@
       </div>
 
       <div class="form-group">
+        {!! Form::label('layer['.$i.'][connectiontype]', 'Connection Type:') !!}
+        {!! Form::select('layer['.$i.'][connectiontype]', [MS_SHAPEFILE =>  'Shapefile', MS_POSTGIS => 'PostGIS'], $map->getlayer($i)->connectiontype, ['class' => 'form-control']) !!}
+      </div>
+
+      <div class="form-group ct{{ MS_SHAPEFILE }}">
         {!! Form::label('layer['.$i.'][data]', 'Data Source:') !!}
         {!! Form::text('layer['.$i.'][data]', null, ['class' => 'form-control']) !!}
+      </div>
+
+      <div class="form-group ct{{ MS_POSTGIS }}">
+        {!! Form::label('layer['.$i.'][connectionhost]', 'Server Address:') !!}
+        {!! Form::text('layer['.$i.'][connectionhost]', $connections[$i]['host'], ['class' => 'form-control']) !!}
+      </div>
+
+      <div class="form-group ct{{ MS_POSTGIS }}">
+        {!! Form::label('layer['.$i.'][connectionport]', 'Server Port:') !!}
+        {!! Form::text('layer['.$i.'][connectionport]', $connections[$i]['port'], ['class' => 'form-control']) !!}
+      </div>
+
+      <div class="form-group ct{{ MS_POSTGIS }} ct7">
+        {!! Form::label('layer['.$i.'][connectiondb]', 'Database:') !!}
+        {!! Form::text('layer['.$i.'][connectiondb]', $connections[$i]['dbname'], ['class' => 'form-control']) !!}
+      </div>
+
+      <div class="form-group ct{{ MS_POSTGIS }} ct7">
+        {!! Form::label('layer['.$i.'][connectionuser]', 'User:') !!}
+        {!! Form::text('layer['.$i.'][connectionuser]', $connections[$i]['user'], ['class' => 'form-control']) !!}
+      </div>
+
+      <div class="form-group ct{{ MS_POSTGIS }} ct7">
+        {!! Form::label('layer['.$i.'][connectionpass]', 'Password:') !!}
+        {!! Form::text('layer['.$i.'][connectionpass]', $connections[$i]['password'], ['class' => 'form-control']) !!}
+      </div>
+
+      <div class="form-group ct{{ MS_POSTGIS }} ct7">
+        {!! Form::label('layer['.$i.'][connectiontable]', 'Table Name:') !!}
+        {!! Form::text('layer['.$i.'][connectiontable]', $connections[$i]['table'], ['class' => 'form-control']) !!}
+      </div>
+
+      <div class="form-group ct{{ MS_POSTGIS }} ct7">
+        {!! Form::label('layer['.$i.'][connectionfield]', 'Geometry Field Name:') !!}
+        {!! Form::text('layer['.$i.'][connectionfield]', $connections[$i]['field'], ['class' => 'form-control']) !!}
       </div>
 
       <div class="form-group">
@@ -183,7 +223,9 @@
         @for($i = 0; $i < $map->numlayers; $i++)
           $("#layer\\[{{ $i }}\\]\\[data\\]").magicSuggest({
             data: '{{ asset("admin/datasources") }}',
-            value: ['{{ $map->getlayer($i)->data }}'],
+            @if ($connections[$i]['data'] !== null && $connections[$i]['data'] !== '')
+              value: ['{{ $connections[$i]['data'] }}'],
+            @endif
             maxSelection: 1
           });
 
@@ -195,6 +237,18 @@
             displayField: 'description',
             value: ['{{ $map->getlayer($i)->getProjection() }}'],
             maxSelection: 1
+          });
+
+          for (i = 0; i < 8; i++) {
+            $("#MapLayer{{ $i }} > div > .ct" + i).hide();
+          }
+          $("#MapLayer{{ $i }} > div > .ct" + $("#layer\\[{{ $i }}\\]\\[connectiontype\\]").val()).show();
+
+          $("#layer\\[{{ $i }}\\]\\[connectiontype\\]").change(function () {
+            for (i = 0; i < 8; i++) {
+              $("#MapLayer{{ $i }} > div > .ct" + i).hide();
+            }
+            $("#MapLayer{{ $i }} > div > .ct" + $("#layer\\[{{ $i }}\\]\\[connectiontype\\]").val()).show();
           });
         @endfor
       });
