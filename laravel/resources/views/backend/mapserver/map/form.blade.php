@@ -177,17 +177,26 @@
 
       <div class="form-group">
         {!! Form::label('layer['.$i.'][color]', 'Color:') !!}
-        {!! Form::text('layer['.$i.'][color]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->color), ['class' => 'form-control']) !!}
+        <div class="input-group color{{ $i }}">
+          <span class="input-group-addon"><i></i></span>
+          {!! Form::text('layer['.$i.'][color]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->color), ['class' => 'form-control']) !!}
+        </div>
       </div>
 
       <div class="form-group">
         {!! Form::label('layer['.$i.'][outlinecolor]', 'Outline Color:') !!}
-        {!! Form::text('layer['.$i.'][outlinecolor]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->outlinecolor), ['class' => 'form-control']) !!}
+        <div class="input-group outlinecolor{{ $i }}">
+          <span class="input-group-addon"><i></i></span>
+          {!! Form::text('layer['.$i.'][outlinecolor]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->outlinecolor), ['class' => 'form-control']) !!}
+        </div
       </div>
 
       <div class="form-group">
         {!! Form::label('layer['.$i.'][backgroundcolor]', 'Background Color:') !!}
-        {!! Form::text('layer['.$i.'][backgroundcolor]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->backgroundcolor), ['class' => 'form-control']) !!}
+        <div class="input-group backgroundcolor{{ $i }}">
+          <span class="input-group-addon"><i></i></span>
+          {!! Form::text('layer['.$i.'][backgroundcolor]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->backgroundcolor), ['class' => 'form-control']) !!}
+        </div>
       </div>
     </div>
   </div>
@@ -205,6 +214,10 @@
   </div>
 
 @section('pagescript')
+  <!-- Add reference for Color Picker -->
+  <link href="{{ asset('plugins/colorpicker/css/bootstrap-colorpicker.min.css') }}" rel="stylesheet" type="text/css" />
+  <script src="{{ asset('plugins/colorpicker/js/bootstrap-colorpicker.min.js') }}" type="text/javascript"></script>
+
   <!-- Add reference for MagicSuggest -->
   <link href="{{ asset('assets/magicsuggest/magicsuggest-min.css') }}" rel="stylesheet">
   <script src="{{ asset('assets/magicsuggest/magicsuggest-min.js') }}"></script>
@@ -213,45 +226,49 @@
 
   <!-- Script for applying MagicSuggest to the input text control -->
   <script type="text/javascript">
-  $.ajaxSetup({
+    $.ajaxSetup({
       headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
-  });
+    });
 
-      $(function() {
-        @for($i = 0; $i < $map->numlayers; $i++)
-          $("#layer\\[{{ $i }}\\]\\[data\\]").magicSuggest({
-            data: '{{ asset("admin/datasources") }}',
-            @if ($connections[$i]['data'] !== null && $connections[$i]['data'] !== '')
-              value: ['{{ $connections[$i]['data'] }}'],
-            @endif
-            maxSelection: 1
-          });
+    $(function() {
+      @for($i = 0; $i < $map->numlayers; $i++)
+        $("#layer\\[{{ $i }}\\]\\[data\\]").magicSuggest({
+          data: '{{ asset("admin/datasources") }}',
+          @if ($connections[$i]['data'] !== null && $connections[$i]['data'] !== '')
+            value: ['{{ $connections[$i]['data'] }}'],
+          @endif
+          maxSelection: 1
+        });
 
-          $("#layer\\[{{ $i }}\\]\\[projection\\]").magicSuggest({
-            allowFreeEntries: false,
-            data: '{{ asset("projection") }}',
-            method: 'get',
-            valueField: 'params',
-            displayField: 'description',
-            value: ['{{ $map->getlayer($i)->getProjection() }}'],
-            maxSelection: 1
-          });
+        $("#layer\\[{{ $i }}\\]\\[projection\\]").magicSuggest({
+          allowFreeEntries: false,
+          data: '{{ asset("projection") }}',
+          method: 'get',
+          valueField: 'params',
+          displayField: 'description',
+          value: ['{{ $map->getlayer($i)->getProjection() }}'],
+          maxSelection: 1
+        });
 
+        for (i = 0; i < 8; i++) {
+          $("#MapLayer{{ $i }} > div > .ct" + i).hide();
+        }
+        $("#MapLayer{{ $i }} > div > .ct" + $("#layer\\[{{ $i }}\\]\\[connectiontype\\]").val()).show();
+
+        $("#layer\\[{{ $i }}\\]\\[connectiontype\\]").change(function () {
           for (i = 0; i < 8; i++) {
             $("#MapLayer{{ $i }} > div > .ct" + i).hide();
           }
           $("#MapLayer{{ $i }} > div > .ct" + $("#layer\\[{{ $i }}\\]\\[connectiontype\\]").val()).show();
+        });
 
-          $("#layer\\[{{ $i }}\\]\\[connectiontype\\]").change(function () {
-            for (i = 0; i < 8; i++) {
-              $("#MapLayer{{ $i }} > div > .ct" + i).hide();
-            }
-            $("#MapLayer{{ $i }} > div > .ct" + $("#layer\\[{{ $i }}\\]\\[connectiontype\\]").val()).show();
-          });
-        @endfor
-      });
+        $(".color{{ $i }}").colorpicker({ });
+        $(".outlinecolor{{ $i }}").colorpicker({ });
+        $(".backgroundcolor{{ $i }}").colorpicker({ });
+      @endfor
+    });
 
     $(function() {
       $("#metadata\\[wms_format\\]").magicSuggest({
