@@ -542,13 +542,6 @@ function JsonToTileLayer(layer)
 }
 
 var groupedOverlays = {
-  "Points of Interest": {
-    "Museums": museumLayer
-  },
-  "Reference": {
-    "Boroughs": boroughs,
-    "Subway Lines": subwayLines
-  }
 };
 
 var layerControl = L.control.groupedLayers(baseLayers, groupedOverlays, {
