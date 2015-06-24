@@ -194,6 +194,11 @@ class WmsMapController extends Controller {
 				$layer->name = $value['name'];
 				$layer->type = $value['type'];
 
+				// Default value to Shapefile
+				if (!array_key_exists('connectiontype', $value)) {
+					$value['connectiontype'] = MS_SHAPEFILE
+				}
+
 				// Setup layer data
 				if ($value['connectiontype'] == MS_SHAPEFILE) {
 					if (array_key_exists('data', $value)) {
