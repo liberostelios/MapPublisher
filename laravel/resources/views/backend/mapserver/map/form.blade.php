@@ -188,7 +188,7 @@
         <div class="input-group outlinecolor{{ $i }}">
           <span class="input-group-addon"><i></i></span>
           {!! Form::text('layer['.$i.'][outlinecolor]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->outlinecolor), ['class' => 'form-control']) !!}
-        </div
+        </div>
       </div>
 
       <div class="form-group">
