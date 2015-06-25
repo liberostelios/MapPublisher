@@ -143,6 +143,8 @@ class WmsMapController extends Controller {
 			array_push($connections, $connection);
 		}
 
+		$connections[-1] = array('data' => null, 'host' => null, 'port' => null, 'user' => null, 'password' => null, 'dbname' => null, 'field' => null, 'table' => null);
+
 		return $connections;
 	}
 
@@ -181,6 +183,9 @@ class WmsMapController extends Controller {
 		}
 
 		// LAYERS SUBSECTIONS
+		// Remove the template layer
+		unset($input['layer'][-1]);
+
 		$layer_count = 0;
 		if (array_key_exists('layer', $input)) {
 			$layer_count = count($input['layer']);

@@ -106,23 +106,23 @@
 
 {{-- Layers Section --}}
 <div id="MapLayers">
-@for($i = 0; $i < $map->numlayers; $i++)
-  <div class="box box-warning" id="MapLayer{{ $i }}">
+@for($i = -1; $i < $map->numlayers; $i++)
+  <div class="box box-warning" id="MapLayer{{ $i }}" {{ $i < 0 ? "style=display:none" : "" }}>
     <div class="box-header">
-      <h3 class="box-title">Layer: {{ $map->getlayer($i)->name }}</h3>
+      <h3 class="box-title">Layer: {{ $i >= 0 ? $map->getlayer($i)->name : 'New' }}</h3>
       <div class="box-tools pull-right">
-        <button class="btn btn-box-tool" data-widget="remove" onClick="removeInput('MapLayer{{ $i }}');"><i class="fa fa-times"></i></button>
+        <button class="btn btn-box-tool" id="RemoveButton" data-widget="remove" onClick="removeInput('MapLayer{{ $i }}');"><i class="fa fa-times"></i></button>
       </div>
     </div>
     <div class="box-body">
       <div class="form-group">
         {!! Form::label('layer['.$i.'][name]', 'Name:') !!}
-        {!! Form::text('layer['.$i.'][name]', $map->getlayer($i)->name, ['class' => 'form-control']) !!}
+        {!! Form::text('layer['.$i.'][name]', $i >= 0 ? $map->getlayer($i)->name : null, ['class' => 'form-control']) !!}
       </div>
 
       <div class="form-group">
         {!! Form::label('layer['.$i.'][connectiontype]', 'Connection Type:') !!}
-        {!! Form::select('layer['.$i.'][connectiontype]', [MS_SHAPEFILE =>  'Shapefile', MS_POSTGIS => 'PostGIS'], $map->getlayer($i)->connectiontype, ['class' => 'form-control']) !!}
+        {!! Form::select('layer['.$i.'][connectiontype]', [MS_SHAPEFILE =>  'Shapefile', MS_POSTGIS => 'PostGIS'], $i >= 0 ? $map->getlayer($i)->connectiontype : null, ['class' => 'form-control']) !!}
       </div>
 
       <div class="form-group ct{{ MS_SHAPEFILE }}">
@@ -167,7 +167,7 @@
 
       <div class="form-group">
         {!! Form::label('layer['.$i.'][type]', 'Type:') !!}
-        {!! Form::select('layer['.$i.'][type]', ['Point', 'Line', 'Polygon', 'Null'], $map->getlayer($i)->type, ['class' => 'form-control']) !!}
+        {!! Form::select('layer['.$i.'][type]', ['Point', 'Line', 'Polygon', 'Null'], $i >= 0 ? $map->getlayer($i)->type : null, ['class' => 'form-control']) !!}
       </div>
 
       <div class="form-group">
@@ -177,25 +177,25 @@
 
       <div class="form-group">
         {!! Form::label('layer['.$i.'][color]', 'Color:') !!}
-        <div class="input-group color{{ $i }}">
+        <div class="input-group color">
           <span class="input-group-addon"><i></i></span>
-          {!! Form::text('layer['.$i.'][color]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->color), ['class' => 'form-control']) !!}
+          {!! Form::text('layer['.$i.'][color]', $i >= 0 ? colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->color) : '#000000', ['class' => 'form-control']) !!}
         </div>
       </div>
 
       <div class="form-group">
         {!! Form::label('layer['.$i.'][outlinecolor]', 'Outline Color:') !!}
-        <div class="input-group outlinecolor{{ $i }}">
+        <div class="input-group outlinecolor">
           <span class="input-group-addon"><i></i></span>
-          {!! Form::text('layer['.$i.'][outlinecolor]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->outlinecolor), ['class' => 'form-control']) !!}
+          {!! Form::text('layer['.$i.'][outlinecolor]', $i >= 0 ? colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->outlinecolor) : '#000000', ['class' => 'form-control']) !!}
         </div>
       </div>
 
       <div class="form-group">
         {!! Form::label('layer['.$i.'][backgroundcolor]', 'Background Color:') !!}
-        <div class="input-group backgroundcolor{{ $i }}">
+        <div class="input-group backgroundcolor">
           <span class="input-group-addon"><i></i></span>
-          {!! Form::text('layer['.$i.'][backgroundcolor]', colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->backgroundcolor), ['class' => 'form-control']) !!}
+          {!! Form::text('layer['.$i.'][backgroundcolor]', $i >= 0 ? colorObjToString($map->getLayer($i)->getClass(0)->getStyle(0)->backgroundcolor) : '#000000', ['class' => 'form-control']) !!}
         </div>
       </div>
     </div>
@@ -210,6 +210,21 @@
     <div class="box-footer">
       {!! Form::submit($submitButtonText, ['class' => 'btn btn-success']) !!}
       <button type="button" class="btn btn-warning" onClick="addInput('MapLayers');">Add Layer</button>
+    </div>
+  </div>
+
+  <div class="box box-warning" id="NewMapLayer" style="display: none">
+    <div class="box-header">
+      <h3 class="box-title">New Layer</h3>
+      <div class="box-tools pull-right">
+        <button class="btn btn-box-tool" data-widget="remove" onClick="addInput('MapLayersCOUNTER');" id="RemoveButton"><i class="fa fa-times"></i></button>
+      </div>
+    </div>
+    <div class="box-body">
+      <div class="form-group">
+        {!! Form::label('[name]', 'Name:') !!}
+        {!! Form::text('[name]', null, ['class' => 'form-control']) !!}
+      </div>
     </div>
   </div>
 
@@ -234,39 +249,7 @@
 
     $(function() {
       @for($i = 0; $i < $map->numlayers; $i++)
-        $("#layer\\[{{ $i }}\\]\\[data\\]").magicSuggest({
-          data: '{{ asset("admin/datasources") }}',
-          @if ($connections[$i]['data'] !== null && $connections[$i]['data'] !== '')
-            value: ['{{ $connections[$i]['data'] }}'],
-          @endif
-          maxSelection: 1
-        });
-
-        $("#layer\\[{{ $i }}\\]\\[projection\\]").magicSuggest({
-          allowFreeEntries: false,
-          data: '{{ asset("projection") }}',
-          method: 'get',
-          valueField: 'params',
-          displayField: 'description',
-          value: ['{{ $map->getlayer($i)->getProjection() }}'],
-          maxSelection: 1
-        });
-
-        for (i = 0; i < 8; i++) {
-          $("#MapLayer{{ $i }} > div > .ct" + i).hide();
-        }
-        $("#MapLayer{{ $i }} > div > .ct" + $("#layer\\[{{ $i }}\\]\\[connectiontype\\]").val()).show();
-
-        $("#layer\\[{{ $i }}\\]\\[connectiontype\\]").change(function () {
-          for (i = 0; i < 8; i++) {
-            $("#MapLayer{{ $i }} > div > .ct" + i).hide();
-          }
-          $("#MapLayer{{ $i }} > div > .ct" + $("#layer\\[{{ $i }}\\]\\[connectiontype\\]").val()).show();
-        });
-
-        $(".color{{ $i }}").colorpicker({ });
-        $(".outlinecolor{{ $i }}").colorpicker({ });
-        $(".backgroundcolor{{ $i }}").colorpicker({ });
+        initializeLayer({{ $i }}, '{{ $connections[$i]['data'] }}', '{{ $map->getlayer($i)->getProjection() }}');
       @endfor
     });
 
@@ -302,42 +285,80 @@
   <script type="text/javascript">
     var counter = {{ $map->numlayers }};
     function addInput(divName){
-      var newdiv = document.createElement('div');
-      newdiv.innerHTML = "<div class='box box-warning' id='MapLayer" + counter + "'>"+
-        "<div class='box-header'>"+
-          "<h3 class='box-title'>Layer: New Layer</h3>"+
-          "<div class='box-tools pull-right'>"+
-            "<button class='btn btn-box-tool' data-widget='remove' onClick='removeInput(\"MapLayer" + counter + "\");'><i class='fa fa-times'></i></button>"+
-          "</div>"+
-        "</div>"+
-        "<div class='box-body'>"+
-          "<div class='form-group'>"+
-            "<label for='layer[" + counter + "][name]'>Name</label>"+
-            "<input type='text' class='form-control' name='layer[" + counter + "][name]' id='layer[" + counter + "][name]' placeholder='Layer " + counter + "'>"+
-          "</div>"+
-          "<div class='form-group'>"+
-            "<label for='layer[" + counter + "][data]'>Data Source</label>"+
-            "<input type='text' class='form-control' name='layer[" + counter + "][data]' id='layer[" + counter + "][data]' placeholder='Data Source'>"+
-          "</div>"+
-          "<div class='form-group'>"+
-            "<label for='layer[" + counter + "][type]'>Name</label>"+
-            "<select class='form-control' id='layer[" + counter + "][type]' name='layer[" + counter + "][type]'><option value='0'>Point</option><option value='1'>Line</option><option value='2' selected='selected'>Polygon</option><option value='3'>Null</option></select>"+
-          "</div>"+
-        "</div>"+
-      "</div>";
-      document.getElementById(divName).appendChild(newdiv);
+      // Get the 'template'
+      var itm = document.getElementById("MapLayer-1");
 
-      $("#layer\\[" + counter + "\\]\\[data\\]").magicSuggest({
-        data: '{{ asset("admin/datasources") }}',
-        value: [],
-        maxSelection: 1
-      });
+      // Deep clone
+      var cln = itm.cloneNode(true);
+
+      // Fix ids and style
+      cln.style = "";
+      cln.id = "MapLayer" + counter;
+
+      var all = cln.getElementsByTagName('*');
+
+      for(var i = -1, l = all.length; ++i<l;) {
+        all[i].id = all[i].id.replace('-1', counter);
+        if (all[i].getAttribute('name') != null) {
+          all[i].setAttribute('name', all[i].getAttribute('name').replace('-1', counter));
+        }
+      }
+
+      var btn = cln.querySelector("#RemoveButton");
+      btn.setAttribute('onclick', "removeInput('MapLayer" + counter + "');");
+
+      // Add
+      document.getElementById(divName).appendChild(cln);
+
+      initializeLayer(counter, null, null);
+
       counter++;
     }
 
     function removeInput(divName){
       document.getElementById(divName).remove();
       counter--;
+    }
+
+    function initializeLayer(layerNum, dataValue, projectionValue) {
+      $("#layer\\[" + layerNum + "\\]\\[data\\]").magicSuggest({
+        data: '{{ asset("admin/datasources") }}',
+        value: [ formatString(dataValue) ],
+        maxSelection: 1
+      });
+
+      $("#layer\\[" + layerNum + "\\]\\[projection\\]").magicSuggest({
+        allowFreeEntries: false,
+        data: '{{ asset("projection") }}',
+        method: 'get',
+        valueField: 'params',
+        displayField: 'description',
+        value: [ formatString(projectionValue) ],
+        maxSelection: 1
+      });
+
+      updateFields(layerNum);
+      $("#layer\\[" + layerNum + "\\]\\[connectiontype\\]").attr("onchange", "updateFields(" + layerNum + ");");
+
+      $(".color").colorpicker({ });
+      $(".outlinecolor").colorpicker({ });
+      $(".backgroundcolor").colorpicker({ });
+    }
+
+    function formatString(value) {
+      if (value == '') {
+        return null;
+      }
+      else {
+        return value;
+      }
+    }
+
+    function updateFields(layerNum) {
+      for (i = 0; i < 8; i++) {
+        $("#MapLayer" + layerNum + " > div > .ct" + i).hide();
+      }
+      $("#MapLayer" + layerNum + " > div > .ct" + $("#layer\\[" + layerNum + "\\]\\[connectiontype\\]").val()).show();
     }
   </script>
 @stop
